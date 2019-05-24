@@ -3,7 +3,8 @@ package client
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/pkg/errors"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -59,7 +60,7 @@ func (c DingTalkClient) Execute(request OapiRobotSendRequest) (*OapiRobotSendRes
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		return nil, errors.Errorf("http response status code is: %d", resp.StatusCode)
+		return nil, errors.New(fmt.Sprintf("http response status code is: %d", resp.StatusCode))
 	}
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -72,4 +73,3 @@ func (c DingTalkClient) Execute(request OapiRobotSendRequest) (*OapiRobotSendRes
 	}
 	return &oResponse, nil
 }
-

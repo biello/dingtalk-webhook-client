@@ -14,13 +14,27 @@ type DingTalkClient struct {
 }
 
 type OapiRobotSendRequest struct {
-	MsgType string `json:"msgtype"`
-	Text    Text   `json:"text"`
-	At      At     `json:"at"`
+	MsgType  string   `json:"msgtype"`
+	Text     Text     `json:"text"`
+	Markdown Markdown `json:"markdown"`
+	Link     Link     `json:"link"`
+	At       At       `json:"at"`
 }
 
 type Text struct {
 	Content string `json:"content"`
+}
+
+type Markdown struct {
+	Title string `json:"title"`
+	Text  string `json:"text"`
+}
+
+type Link struct {
+	Title      string `json:"title"`
+	Text       string `json:"text"`
+	PicUrl     string `json:"picUrl"`
+	MessageUrl string `json:"messageUrl"`
 }
 
 type At struct {

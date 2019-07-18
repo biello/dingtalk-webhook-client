@@ -85,5 +85,8 @@ func (c DingTalkClient) Execute(request OapiRobotSendRequest) (*OapiRobotSendRes
 	if err = json.Unmarshal(responseBody, &oResponse); err != nil {
 		return nil, err
 	}
+	if oResponse.ErrCode != 0 {
+		return &oResponse, errors.New(fmt.Sprintf("response: %s", responseBody))
+	}
 	return &oResponse, nil
 }

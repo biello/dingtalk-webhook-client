@@ -1,6 +1,5 @@
 # dingtalk-webhook-client
 Go语言钉钉群机器人客户端，支持发送文本、链接卡片、Markdown类型的消息
-## 效果
 ### 文本
 ![文本](https://img.alicdn.com/tfs/TB1jFpqaRxRMKJjy0FdXXaifFXa-497-133.png#align=left&display=inline&height=112&originHeight=133&originWidth=497&status=done&width=418)
 ### 链接卡片

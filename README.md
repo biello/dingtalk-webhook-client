@@ -1,4 +1,5 @@
 # dingtalk-webhook-client
+Go语言钉钉群机器人客户端，支持发送文本、链接卡片、Markdown类型的消息
 
 ## usage
 

@@ -2,15 +2,23 @@ package client
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
+	"time"
 )
 
 type DingTalkClient struct {
 	webhook string
+	secret  string
 }
 
 type OapiRobotSendRequest struct {
@@ -47,9 +55,10 @@ type OapiRobotSendResponse struct {
 	ErrCode int64  `json:"errcode"`
 }
 
-func DefaultDingTalkClient(webhook string) DingTalkClient {
+func DefaultDingTalkClient(webhook, secret string) DingTalkClient {
 	return DingTalkClient{
 		webhook: webhook,
+		secret:  secret,
 	}
 }
 
@@ -62,13 +71,17 @@ func CreateOapiRobotSendTextRequest(content string, atMobiles []string, isAtAll 
 
 }
 
-func (c DingTalkClient) Execute(request OapiRobotSendRequest) (*OapiRobotSendResponse, error) {
+func (d DingTalkClient) Execute(request OapiRobotSendRequest) (*OapiRobotSendResponse, error) {
 	reqBytes, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := http.Post(c.webhook, "application/json", bytes.NewReader(reqBytes))
+	pushUrl, err := d.getPushUrl()
+	if err != nil {
+		return nil, err
+	}
+	resp, err := http.Post(pushUrl, "application/json", bytes.NewReader(reqBytes))
 	if err != nil {
 		return nil, err
 	}
@@ -89,4 +102,30 @@ func (c DingTalkClient) Execute(request OapiRobotSendRequest) (*OapiRobotSendRes
 		return &oResponse, errors.New(fmt.Sprintf("response: %s", responseBody))
 	}
 	return &oResponse, nil
+}
+
+func (d DingTalkClient) getPushUrl() (string, error) {
+	if d.secret == "" {
+		return d.webhook, nil
+	}
+
+	timestamp := strconv.FormatInt(time.Now().Unix()*1000, 10)
+	sign, err := d.sign(timestamp)
+	if err != nil {
+		return d.webhook, err
+	}
+
+	query := url.Values{}
+	query.Set("timestamp", timestamp)
+	query.Set("sign", sign)
+	return d.webhook + "&" + query.Encode(), nil
+}
+
+func (d DingTalkClient) sign(timestamp string) (string, error) {
+	stringToSign := fmt.Sprintf("%s\n%s", timestamp, d.secret)
+	h := hmac.New(sha256.New, []byte(d.secret))
+	if _, err := io.WriteString(h, stringToSign); err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(h.Sum(nil)), nil
 }

@@ -5,17 +5,22 @@ import (
 	"github.com/biello/dingtalk-webhook-client/client"
 )
 
+// 钉钉群机器人 webhook 和 secret, 未开启加签 secret 留空
+const (
+	webhook = "https://oapi.dingtalk.com/robot/send?access_token=xxx"
+	secret  = ""
+)
+
 func main() {
 
-	// change param to your webhook
-	cli := client.DefaultDingTalkClient("https://oapi.dingtalk.com/robot/send?access_token=xxxxx")
+	cli := client.DefaultDingTalkClient(webhook, secret)
 
 	// text message
 	textReq := client.CreateOapiRobotSendTextRequest("我就是我, 是不一样的烟火@156xxxx8827", []string{"156xxxx8827", "189xxxx8325"}, false)
 
 	_, err := cli.Execute(textReq)
 	if err != nil {
-		fmt.Printf("send fail:%s", err)
+		fmt.Printf("send fail:%s\n", err)
 	}
 
 	// link message
@@ -30,7 +35,7 @@ func main() {
 	}
 	_, err = cli.Execute(linkReq)
 	if err != nil {
-		fmt.Printf("send fail:%s", err)
+		fmt.Printf("send fail:%s\n", err)
 	}
 
 	// markdown message
@@ -50,6 +55,6 @@ func main() {
 	}
 	_, err = cli.Execute(markDownReq)
 	if err != nil {
-		fmt.Printf("send fail:%s", err)
+		fmt.Printf("send fail:%s\n", err)
 	}
 }

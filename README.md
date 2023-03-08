@@ -7,7 +7,7 @@ Go语言钉钉群机器人客户端，支持发送文本、链接卡片、Markdo
 ### Markdown
 ![Markdown](https://img.alicdn.com/tfs/TB1yL3taUgQMeJjy0FeXXXOEVXa-492-380.png#align=left&display=inline&height=241&originHeight=380&originWidth=492&status=done&width=312)
 
-钉钉群机器人官方介绍：https://ding-doc.dingtalk.com/doc#/serverapi2/qf2nxq
+钉钉群机器人官方介绍：https://open.dingtalk.com/document/orgapp/robot-overview
 
 ## usage
 
